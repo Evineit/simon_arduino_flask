@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simon dice</title>
+
+    <style>
+      @import url('https://fonts.googleapis.com/css?family=Coda+Caption:800|Press+Start+2P|Share+Tech+Mono');
+      body {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        height: 100vh;
+        background-size: cover;
+        font-family: 'Press Start 2P', cursive;
+      }
+      button {
+        margin: 0 0.2vw;
+      }
+
+      .gameboard {
+        height: 100vh;
+        width: 100vh;
+        border-radius: 50%;
+        overflow: hidden;
+        margin: 0 auto;
+        max-height: 52vh;
+        max-width: 52vh;
+        min-width: 40vh;
+        min-height: 40vh;
+        box-shadow: 0 0 110px -20px #fff;
+        border: 3vh solid #000;
+        position: relative;
+        transform: scale(1.6);
+      }
+
+      #black-center {
+        display: block;
+        position: absolute;
+        width: 20vh;
+        height: 20vh;
+        background: #000;
+        border-radius: 50%;
+        overflow: hidden;
+        margin: 0 auto;
+        padding: 0 auto;
+        top: calc(50% - 12vh);
+        left: calc(50% - 12vh);
+        box-shadow: 0 0 70px -20px #fff;
+        border: 2vh solid #000;
+      }
+
+      .color {
+        width: 50%;
+        height: 50%;
+        display: inline-block;
+        -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+        backface-visibility: hidden;
+        -webkit-touch-callout: none !important;
+      }
+      .color:hover, .color:active,
+      .color:focus {
+        outline: none;
+        touch-action: none;
+      }
+
+      .left {
+        float: left;
+      }
+
+      .right {
+        float: left;
+      }
+
+      .azul {
+        background-image: linear-gradient(-45deg, #0000ff 50%, rgba(0,0,0,0.6));
+        background-color: #0000ff;
+      }
+
+      .azul.light {
+        background-image: linear-gradient(-45deg, #6f6fff 50%, rgba(0,0,0,0.3));
+      }
+
+      .rojo {
+        background-image: linear-gradient(225deg, #ff0000 40%, rgba(0,0,0,0.7));
+        background-color: #ff0000;
+      }
+
+      .rojo.light {
+        background-image: linear-gradient(225deg, #ff8989 40%, rgba(0,0,0,0.3));
+      }
+
+      .amarillo {
+        background-image: linear-gradient(45deg, #ffee00 37%, rgba(0,0,0,.7));
+        background-color: #ffee00;
+      }
+
+      .amarillo.light {
+        background-image: linear-gradient(45deg, #fffab0 37%, rgba(0,0,0,.4));
+      }
+
+      .verde {
+        background-image: linear-gradient( -225deg, #00ff00 40%, rgba(0,0,0,0.7) );
+        background-color: #00ff00;
+      }
+
+      .verde.light {
+        background-image: linear-gradient( -225deg, #a1ffa1 40%, rgba(0,0,0,0.3) );
+      }
+
+      .btnEmpezar {
+        width: 320px;
+        height: 80px;
+        background-image: linear-gradient(to bottom, #000, #555);
+        color: #ccc;
+        font-size: 2rem;
+        position: absolute;
+        top: calc(70% - 40px);
+        left: calc(50% - 160px);
+        box-shadow: -6px 0px 20px 2px #000;
+        border-radius: 10px;
+        z-index: 11;
+      }
+      .btnEmpezar:hover, .btnEmpezar:focus,
+      .btnEmpezar:active, .btnEmpezar:focus-within,
+      .btnEmpezar:hover {
+        outline: none;
+      }
+
+      .hide {
+        display: none;
+      }
+      * {
+        /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+        font-family: 'Press Start 2P', cursive;
+        font-size: .7em;
+      }
+      .simon-txt{
+        text-align: center;
+        height: 30%;
+        margin-top: 0;
+      }
+      .simon-txt p {
+        margin: 0;
+        padding: 0;
+        margin-block-start: 0em !important;
+        margin-block-end: 0em !important;
+      }
+      .simon-txt img {
+        padding-top: 3.5vh;
+        height: 3vh;
+      }
+      .start, #speaker {
+        width: 100%;
+        height: 50%;
+        display: inline-block;
+        border-top: 5vh solid #000;
+        background-image: linear-gradient(180deg, #555 10%, rgba(136,136,136,.1));
+      }
+      .start {
+        /* border-right: 1vh solid #000; */
+        float: left;
+        text-align: center;
+      }
+      .start button {
+        padding: 0;
+        width: 6vh;
+        height: 6vh;
+        border-radius: 50%;
+        box-shadow: -2px 0 18px -6px #fff;
+        border: .6vh solid #000;
+        font-size: 0.9vh;
+        margin-top: 2vh;
+        transform: scale(1.15);
+      }
+      .start button:focus, .start button:active {
+        outline: none;
+      }
+      .start button:hover {
+        cursor:pointer;
+      }
+      .start button:active {
+        box-shadow: none;
+        cursor: pointer;
+      }
+      #btn-start {
+        background-image: linear-gradient(red, darkred);
+      }
+      #btn-start:hover {
+        background-image: linear-gradient(orangered, red);
+      }
+      #btn-reset {
+        background-image: linear-gradient(yellow, goldenrod);
+      }
+      #btn-reset:hover{
+        background-image: linear-gradient(lightyellow, yellow);
+      }
+      .level-btn-text {
+        margin: 0.5vh 0;
+        padding: 0;
+        display: block;
+        position: absolute;
+        z-index: 10;
+        right: 4vh;
+        font-size: 1vh;
+        text-shadow: 0 0 10px #ccc;
+      }
+    </style>
+
+</head>
+<body>
+    <div class="gameboard">
+      <div id="black-center" >
+        <div class="start">
+          <button id="btn-start">
+            Start
+          </button>
+          <button id="btn-reset">
+            Reset
+          </button>
+        </div>
+      </div>
+      <div id="verde" class="color verde right"></div>
+      <div id="rojo" class="color rojo right"></div>
+      <div id="amarillo" class="color amarillo left"></div>
+      <div id="azul" class="color azul left"></div>
+    </div>
+
+    <script>
+
+        var base = 'http://127.0.0.1:5000'
+        var green = document.getElementById("verde");
+        var red = document.getElementById("rojo");
+        var blue = document.getElementById("azul");
+        var yellow = document.getElementById("amarillo");
+        var empezar = document.getElementById("btn-start");
+        var reset = document.getElementById("btn-reset");
+
+        function llamar(url) {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function() {
+                if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
+                    console.log(xmlHttp.responseText);
+            }
+            xmlHttp.open("GET", url, true);
+            xmlHttp.send(null);
+        }
+
+          green.addEventListener("click", () => {
+            llamar(base + '/api/verde')
+          });
+
+          green.addEventListener("mousedown", () => {
+            green.style.backgroundColor = "rgb(0, 256, 0)";
+          });
+
+          green.addEventListener("mouseup", () => {
+            green.style.backgroundColor = "rgb(0, 150, 0)";
+          });
+
+          red.addEventListener("click", () => {
+            llamar(base + '/api/rojo')
+          });
+
+          red.addEventListener("mousedown", () => {
+            red.style.backgroundColor = "red";
+          });
+
+          red.addEventListener("mouseup", () => {
+            red.style.backgroundColor = "rgb(150, 0, 0)";
+          });
+
+          blue.addEventListener("click", () => {
+            llamar(base + '/api/azul')
+          });
+
+          blue.addEventListener("mousedown", () => {
+            blue.style.backgroundColor = "blue";
+          });
+
+          blue.addEventListener("mouseup", () => {
+            blue.style.backgroundColor = "rgb(0, 0, 150)";
+          });
+
+          yellow.addEventListener("click", () => {
+            llamar(base + '/api/amarillo')
+          });
+
+          yellow.addEventListener("mousedown", () => {
+            yellow.style.backgroundColor = "yellow";
+          });
+
+          yellow.addEventListener("mouseup", () => {
+            yellow.style.backgroundColor = "rgb(150, 150, 0)";
+          });
+
+          empezar.addEventListener("click", () => {
+            llamar(base + '/api/empezar')
+          });
+
+          reset.addEventListener("click", () => {
+            llamar(base + '/api/reset')
+          });
+    </script>
+
+</body>
+</html>
