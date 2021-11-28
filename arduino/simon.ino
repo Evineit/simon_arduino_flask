@@ -14,51 +14,48 @@ void loop() {
     switch (entrada)
     {
     case 5:
+      Serial.println("inicio");
       play();
       break;
     default:
       break;
     }
   }
-  // for (int i = 1; i <= 5; i++)
-  // {
-  //   update_level(i);
-  //   delay(500);
-  //   /* code */
-  // }
-
 }
 
 void play() {
-  while (pos <= 5)
+  int pos = 0;
+  for (int i = 0; i < 5; i++) {
+    secuencia[i] = 0;
+  }
+
+  while (pos < 5)
   {
-    secuencia[pos] = random(5);
+    secuencia[pos] = random(1, 5);
     pos++;
-    for (auto&& i : secuencia)
+    update_level(pos);
+    for (int i = 0; i < 5; i++)
     {
       String temp = "";
-      Serial.print(temp + i + ",");
+      Serial.print(temp + secuencia[i] + ",");
     }
     Serial.println();
-    while (!Serial.available()) {}
-    int entrada = Serial.parseInt();
-    for (int i = 0; i <= pos; i++)
+    for (int i = 0; i < pos; i++)
     {
       while (!Serial.available()) {}
       int entrada = Serial.parseInt();
       if (entrada == 6) {
+        Serial.println("reset");
         break;
       }
-      if (entrada == secuencia[i]) {
+      else if (entrada == secuencia[i]) {
         Serial.println("bien");
-        break;
       }
       else {
         Serial.println("mal");
+        return;
       }
     }
-    Serial.println(pos);
-    update_level(pos);
   }
   Serial.println("fin");
 }
