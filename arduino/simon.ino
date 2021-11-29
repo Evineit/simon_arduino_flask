@@ -14,7 +14,6 @@ void loop() {
     switch (entrada)
     {
     case 5:
-      Serial.println("inicio");
       play();
       break;
     default:
@@ -39,7 +38,7 @@ void play() {
       String temp = "";
       Serial.print(temp + secuencia[i] + ",");
     }
-    Serial.println();
+    Serial.println("inicio");
     for (int i = 0; i < pos; i++)
     {
       while (!Serial.available()) {}

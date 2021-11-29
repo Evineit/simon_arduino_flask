@@ -5,45 +5,60 @@ ser = serial.Serial("COM2", 9600)
 
 app = Flask(__name__)
 
-@app.route('/api/verde', methods=['GET'])
+
+@app.route("/api/verde", methods=["GET"])
 def api_verde():
     ser.write(b"1")
     print("OK, Verde")
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    return json.dumps({"success": True}), 200, {"ContentType": "application/json"}
 
-@app.route('/api/rojo', methods=['GET'])
+
+@app.route("/api/rojo", methods=["GET"])
 def api_rojo():
     ser.write(b"2")
     print("OK, Rojo")
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    return json.dumps({"success": True}), 200, {"ContentType": "application/json"}
 
-@app.route('/api/amarillo', methods=['GET'])
+
+@app.route("/api/amarillo", methods=["GET"])
 def api_amarillo():
     ser.write(b"3")
     print("OK, Amarillo")
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    return json.dumps({"success": True}), 200, {"ContentType": "application/json"}
 
-@app.route('/api/azul', methods=['GET'])
+
+@app.route("/api/azul", methods=["GET"])
 def api_azul():
     ser.write(b"4")
     print("OK, Azul")
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    return json.dumps({"success": True}), 200, {"ContentType": "application/json"}
 
-@app.route('/api/empezar', methods=['GET'])
+
+@app.route("/api/empezar", methods=["GET"])
 def api_empezar():
     ser.write(b"5")
     print("OK, Empezar")
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    print("Esperando respuesta")
+    res = ser.read_until().decode()
+    print(res)
+    return (
+        json.dumps({"success": True, "secuencia": res.split(",")[:5]}),
+        200,
+        {"ContentType": "application/json"},
+    )
 
-@app.route('/api/reset', methods=['GET'])
+
+@app.route("/api/reset", methods=["GET"])
 def api_reset():
     ser.write(b"6")
     print("OK, Reset")
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    return json.dumps({"success": True}), 200, {"ContentType": "application/json"}
 
-@app.route('/')
+
+@app.route("/")
 def home():
-   return render_template('index.html')
+    return render_template("index.html")
 
-if __name__ == '__main__':
-   app.run()
+
+if __name__ == "__main__":
+    app.run()
