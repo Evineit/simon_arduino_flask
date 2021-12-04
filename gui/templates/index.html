@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Simon dice</title>
-
+    <script src="{{ url_for('static', filename = 'script.js') }}" defer></script>
     <style>
       @import url('https://fonts.googleapis.com/css?family=Coda+Caption:800|Press+Start+2P|Share+Tech+Mono');
       body {
@@ -226,82 +226,6 @@
       <div id="azul" class="color azul left"></div>
     </div>
 
-    <script>
-
-        var base = 'http://127.0.0.1:5000'
-        var green = document.getElementById("verde");
-        var red = document.getElementById("rojo");
-        var blue = document.getElementById("azul");
-        var yellow = document.getElementById("amarillo");
-        var empezar = document.getElementById("btn-start");
-        var reset = document.getElementById("btn-reset");
-
-        function llamar(url) {
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.onreadystatechange = function() {
-                if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
-                    console.log(xmlHttp.responseText);
-            }
-            xmlHttp.open("GET", url, true);
-            xmlHttp.send(null);
-        }
-
-          green.addEventListener("click", () => {
-            llamar(base + '/api/verde')
-          });
-
-          green.addEventListener("mousedown", () => {
-            green.style.backgroundColor = "rgb(0, 256, 0)";
-          });
-
-          green.addEventListener("mouseup", () => {
-            green.style.backgroundColor = "rgb(0, 150, 0)";
-          });
-
-          red.addEventListener("click", () => {
-            llamar(base + '/api/rojo')
-          });
-
-          red.addEventListener("mousedown", () => {
-            red.style.backgroundColor = "red";
-          });
-
-          red.addEventListener("mouseup", () => {
-            red.style.backgroundColor = "rgb(150, 0, 0)";
-          });
-
-          blue.addEventListener("click", () => {
-            llamar(base + '/api/azul')
-          });
-
-          blue.addEventListener("mousedown", () => {
-            blue.style.backgroundColor = "blue";
-          });
-
-          blue.addEventListener("mouseup", () => {
-            blue.style.backgroundColor = "rgb(0, 0, 150)";
-          });
-
-          yellow.addEventListener("click", () => {
-            llamar(base + '/api/amarillo')
-          });
-
-          yellow.addEventListener("mousedown", () => {
-            yellow.style.backgroundColor = "yellow";
-          });
-
-          yellow.addEventListener("mouseup", () => {
-            yellow.style.backgroundColor = "rgb(150, 150, 0)";
-          });
-
-          empezar.addEventListener("click", () => {
-            llamar(base + '/api/empezar')
-          });
-
-          reset.addEventListener("click", () => {
-            llamar(base + '/api/reset')
-          });
-    </script>
 
 </body>
 </html>
