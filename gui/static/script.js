@@ -8,20 +8,71 @@ var yellow = document.getElementById("amarillo");
 var empezar = document.getElementById("btn-start");
 var reset = document.getElementById("btn-reset");
 
-let state = 0;
+let lock = false;
+
+document.querySelectorAll('.boton').forEach(function (boton) {
+    boton.classList.add("apagado")
+    boton.addEventListener('mousedown', () => {
+        parpadear_color(boton)
+
+    })
+})
+
+function parpadear_color (boton) {
+    boton.classList.remove("apagado")
+    return new Promise(resolve => {
+        setTimeout(() => {
+            boton.classList.add("apagado")
+            resolve('resolved');
+        }, 1000);
+    })
+}
+
+async function parpadear_esperar (boton, espera = 500) {
+    await parpadear_color(boton)
+    return new Promise(resolve => setTimeout(resolve, espera))
+}
+
+async function asyncCall (secuencia) {
+    for (let index = 0;index < secuencia.length;index++) {
+        switch (parseInt(secuencia[index])) {
+            case 1:
+                await parpadear_esperar(green)
+                break;
+            case 2:
+                await parpadear_esperar(red)
+                break
+            case 3:
+                await parpadear_esperar(yellow)
+            case 4:
+                await parpadear_esperar(blue)
+            default:
+                break;
+        }
+    }
+}
+
 
 function llamar (url) {
     fetch(url)
-    .then(function (responseText){
-        return responseText.json()
-    })
-    .then(function (myJson){
-        console.log(myJson.response)
-    })
-    .catch(function(e) {
-        console.error(e);
-    })
+        .then(function (responseText) {
+            return responseText.json()
+        })
+        .then(function (myJson) {
+            console.log(myJson.response)
+            Object.keys(myJson.response).forEach((key, index) => {
+                console.log(myJson.response[key]);
+                lock = true
+                if (myJson.response[key].estado == "inicio") {
+                    asyncCall(myJson.response[key].secuencia)
+                }
+            });
+        })
+        .catch(function (e) {
+            console.error(e);
+        })
 }
+
 
 green.addEventListener("click", () => {
     llamar(base + '/api/verde')

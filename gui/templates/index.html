@@ -18,6 +18,10 @@
         margin: 0 0.2vw;
       }
 
+      .apagado {
+        filter: brightness(.5);
+      }
+
       .gameboard {
         height: 100vh;
         width: 100vh;
@@ -35,6 +39,7 @@
       }
 
       #black-center {
+        z-index: 1;
         display: block;
         position: absolute;
         width: 20vh;
@@ -220,10 +225,10 @@
           </button>
         </div>
       </div>
-      <div id="verde" class="color verde right"></div>
-      <div id="rojo" class="color rojo right"></div>
-      <div id="amarillo" class="color amarillo left"></div>
-      <div id="azul" class="color azul left"></div>
+      <div id="verde" class="boton color verde right"></div>
+      <div id="rojo" class="boton color rojo right"></div>
+      <div id="amarillo" class="boton color amarillo left"></div>
+      <div id="azul" class="boton color azul left"></div>
     </div>
 
 
