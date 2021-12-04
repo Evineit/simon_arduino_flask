@@ -1,6 +1,6 @@
-console.log("new")
+console.log("new");
 
-var base = 'http://127.0.0.1:5000'
+var base = "http://127.0.0.1:5000";
 var green = document.getElementById("verde");
 var red = document.getElementById("rojo");
 var blue = document.getElementById("azul");
@@ -8,74 +8,81 @@ var yellow = document.getElementById("amarillo");
 var empezar = document.getElementById("btn-start");
 var reset = document.getElementById("btn-reset");
 
-let lock = false;
+let lock_secuencia = false;
+let lock_peticion = false;
 
-document.querySelectorAll('.boton').forEach(function (boton) {
-    boton.classList.add("apagado")
-    boton.addEventListener('mousedown', () => {
-        parpadear_color(boton)
-
-    })
-})
+document.querySelectorAll(".boton").forEach(function (boton) {
+    boton.classList.add("apagado");
+    boton.addEventListener("mousedown", () => {
+        if (lock_secuencia || lock_peticion) return;
+        parpadear_color(boton);
+    });
+});
 
 function parpadear_color (boton) {
-    boton.classList.remove("apagado")
-    return new Promise(resolve => {
+    boton.classList.remove("apagado");
+    return new Promise((resolve) => {
         setTimeout(() => {
-            boton.classList.add("apagado")
-            resolve('resolved');
+            boton.classList.add("apagado");
+            resolve("resolved");
         }, 1000);
-    })
+    });
 }
 
 async function parpadear_esperar (boton, espera = 500) {
-    await parpadear_color(boton)
-    return new Promise(resolve => setTimeout(resolve, espera))
+    await parpadear_color(boton);
+    return new Promise((resolve) => setTimeout(resolve, espera));
 }
 
 async function asyncCall (secuencia) {
     for (let index = 0;index < secuencia.length;index++) {
         switch (parseInt(secuencia[index])) {
             case 1:
-                await parpadear_esperar(green)
+                await parpadear_esperar(green);
                 break;
             case 2:
-                await parpadear_esperar(red)
-                break
+                await parpadear_esperar(red);
+                break;
             case 3:
-                await parpadear_esperar(yellow)
+                await parpadear_esperar(yellow);
+                break
             case 4:
-                await parpadear_esperar(blue)
+                await parpadear_esperar(blue);
+                break
             default:
                 break;
         }
     }
+    lock_secuencia = false;
 }
 
-
 function llamar (url) {
+    if (lock_secuencia || lock_peticion) return;
+    lock_peticion = true;
     fetch(url)
         .then(function (responseText) {
-            return responseText.json()
+            return responseText.json();
         })
         .then(function (myJson) {
-            console.log(myJson.response)
+            console.log(myJson.response);
             Object.keys(myJson.response).forEach((key, index) => {
                 console.log(myJson.response[key]);
-                lock = true
                 if (myJson.response[key].estado == "inicio") {
-                    asyncCall(myJson.response[key].secuencia)
+                    lock_secuencia = true;
+                    asyncCall(myJson.response[key].secuencia);
                 }
             });
         })
         .catch(function (e) {
             console.error(e);
         })
+        .finally(function (e) {
+            lock_peticion = false;
+        });
 }
 
-
 green.addEventListener("click", () => {
-    llamar(base + '/api/verde')
+    llamar(base + "/api/verde");
 });
 
 green.addEventListener("mousedown", () => {
@@ -87,7 +94,7 @@ green.addEventListener("mouseup", () => {
 });
 
 red.addEventListener("click", () => {
-    llamar(base + '/api/rojo')
+    llamar(base + "/api/rojo");
 });
 
 red.addEventListener("mousedown", () => {
@@ -99,7 +106,7 @@ red.addEventListener("mouseup", () => {
 });
 
 blue.addEventListener("click", () => {
-    llamar(base + '/api/azul')
+    llamar(base + "/api/azul");
 });
 
 blue.addEventListener("mousedown", () => {
@@ -111,7 +118,7 @@ blue.addEventListener("mouseup", () => {
 });
 
 yellow.addEventListener("click", () => {
-    llamar(base + '/api/amarillo')
+    llamar(base + "/api/amarillo");
 });
 
 yellow.addEventListener("mousedown", () => {
@@ -123,9 +130,9 @@ yellow.addEventListener("mouseup", () => {
 });
 
 empezar.addEventListener("click", () => {
-    llamar(base + '/api/empezar')
+    llamar(base + "/api/empezar");
 });
 
 reset.addEventListener("click", () => {
-    llamar(base + '/api/reset')
+    llamar(base + "/api/reset");
 });
