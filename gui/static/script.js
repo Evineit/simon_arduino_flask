@@ -16,7 +16,7 @@ function llamar (url) {
         return responseText.json()
     })
     .then(function (myJson){
-        console.log(myJson)
+        console.log(myJson.response)
     })
     .catch(function(e) {
         console.error(e);

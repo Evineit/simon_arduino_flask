@@ -17,9 +17,15 @@ void loop() {
       play();
       break;
     default:
+    Serial.println("El juego aun no inicia.");
       break;
     }
   }
+}
+
+String stringify_secuencia() {
+  String temp = "";
+  return temp + secuencia[0] + "," + secuencia[1] + "," + secuencia[2] + "," + secuencia[3] + "," + secuencia[4] + ",";
 }
 
 void play() {
@@ -33,25 +39,24 @@ void play() {
     secuencia[pos] = random(1, 5);
     pos++;
     update_level(pos);
-    for (int i = 0; i < 5; i++)
-    {
-      String temp = "";
-      Serial.print(temp + secuencia[i] + ",");
-    }
-    Serial.println("inicio");
+    String temp = "";
+    Serial.println(temp + stringify_secuencia() + "inicio");
     for (int i = 0; i < pos; i++)
     {
       while (!Serial.available()) {}
       int entrada = Serial.parseInt();
       if (entrada == 6) {
-        Serial.println("reset");
+        Serial.println(stringify_secuencia() + "reset");
         break;
       }
       else if (entrada == secuencia[i]) {
-        Serial.println("bien");
+          Serial.println(stringify_secuencia() + "bien");
       }
       else {
-        Serial.println("mal");
+        Serial.println(stringify_secuencia() + "mal");
+        for (int i = 0; i < 5; i++) {
+          secuencia[i] = 0;
+        }
         return;
       }
     }
