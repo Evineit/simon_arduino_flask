@@ -4,10 +4,12 @@ int nivel = 0;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  randomSeed(analogRead(A1));
   init_leds();
 }
 
 void loop() {
+  random(1, 5);
   // put your main code here, to run repeatedly:
   if (Serial.available()) {
     int entrada = Serial.parseInt();
@@ -17,7 +19,7 @@ void loop() {
       play();
       break;
     default:
-    Serial.println("El juego aun no inicia.");
+      Serial.println("El juego aun no inicia.");
       break;
     }
   }
@@ -46,22 +48,28 @@ void play() {
       while (!Serial.available()) {}
       int entrada = Serial.parseInt();
       if (entrada == 6) {
+        reset();
         Serial.println(stringify_secuencia() + "reset");
-        break;
+        return;
       }
       else if (entrada == secuencia[i]) {
-          Serial.println(stringify_secuencia() + "bien");
+        Serial.println(stringify_secuencia() + "bien");
       }
       else {
         Serial.println(stringify_secuencia() + "mal");
-        for (int i = 0; i < 5; i++) {
-          secuencia[i] = 0;
-        }
+        reset();
         return;
       }
     }
   }
-  Serial.println("fin");
+  Serial.println(stringify_secuencia() + "fin");
+}
+
+void reset() {
+  for (int i = 0; i < 5; i++) {
+    secuencia[i] = 0;
+  }
+  update_level(1);
 }
 
 void update_level(int valor) {
