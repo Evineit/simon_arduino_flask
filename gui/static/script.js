@@ -7,6 +7,8 @@ var blue = document.getElementById("azul");
 var yellow = document.getElementById("amarillo");
 var empezar = document.getElementById("btn-start");
 var reset = document.getElementById("btn-reset");
+var txtnivel = document.getElementById("nivel");
+var txtestado = document.getElementById("estado");
 
 let lock_secuencia = false;
 let lock_peticion = false;
@@ -56,6 +58,21 @@ async function asyncCall (secuencia) {
     lock_secuencia = false;
 }
 
+async function verificar_nivel (secuencia) {
+    let cont_nivel = 0;
+
+    for (let index = 0;index < secuencia.length;index++) {
+        switch (parseInt(secuencia[index])) {
+            case 0: break;
+            default:
+                cont_nivel++
+                break;
+        }
+    }
+
+    txtnivel.innerText = "Nivel: " + cont_nivel;
+}
+
 function llamar (url) {
     if (lock_secuencia || lock_peticion) return;
     lock_peticion = true;
@@ -67,8 +84,10 @@ function llamar (url) {
             console.log(myJson.response);
             Object.keys(myJson.response).forEach((key, index) => {
                 console.log(myJson.response[key]);
+                txtestado.innerText = myJson.response[key].estado;
                 if (myJson.response[key].estado == "inicio") {
                     lock_secuencia = true;
+                    verificar_nivel(myJson.response[key].secuencia);
                     asyncCall(myJson.response[key].secuencia);
                 }
             });
@@ -79,6 +98,13 @@ function llamar (url) {
         .finally(function (e) {
             lock_peticion = false;
         });
+}
+
+function resetled () {
+    parpadear_color(green);
+    parpadear_color(red);
+    parpadear_color(blue);
+    parpadear_color(yellow);
 }
 
 green.addEventListener("click", () => {
@@ -135,4 +161,5 @@ empezar.addEventListener("click", () => {
 
 reset.addEventListener("click", () => {
     llamar(base + "/api/reset");
+    resetled();
 });
