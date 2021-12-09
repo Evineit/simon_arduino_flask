@@ -45,9 +45,8 @@ body {
 
 .tabulador {
     text-align: center;
-    padding-left: 10%;
     font-size: 5em;
-    flex: 1 1 auto;
+    flex: 1 1 100%;
 }
 
 #black-center {

@@ -9,6 +9,7 @@ var empezar = document.getElementById("btn-start");
 var reset = document.getElementById("btn-reset");
 var txtnivel = document.getElementById("nivel");
 var txtestado = document.getElementById("estado");
+let txtRespuesta = document.getElementById("respuesta");
 
 let lock_secuencia = false;
 let lock_peticion = false;
@@ -21,7 +22,7 @@ document.querySelectorAll(".boton").forEach(function (boton) {
     });
 });
 
-function parpadear_color (boton) {
+function parpadear_color(boton) {
     boton.classList.remove("apagado");
     return new Promise((resolve) => {
         setTimeout(() => {
@@ -31,13 +32,13 @@ function parpadear_color (boton) {
     });
 }
 
-async function parpadear_esperar (boton, espera = 500) {
+async function parpadear_esperar(boton, espera = 500) {
     await parpadear_color(boton);
     return new Promise((resolve) => setTimeout(resolve, espera));
 }
 
-async function asyncCall (secuencia) {
-    for (let index = 0;index < secuencia.length;index++) {
+async function asyncCall(secuencia) {
+    for (let index = 0; index < secuencia.length; index++) {
         switch (parseInt(secuencia[index])) {
             case 1:
                 await parpadear_esperar(green);
@@ -47,10 +48,10 @@ async function asyncCall (secuencia) {
                 break;
             case 3:
                 await parpadear_esperar(yellow);
-                break
+                break;
             case 4:
                 await parpadear_esperar(blue);
-                break
+                break;
             default:
                 break;
         }
@@ -58,14 +59,15 @@ async function asyncCall (secuencia) {
     lock_secuencia = false;
 }
 
-async function verificar_nivel (secuencia) {
+function verificar_nivel(secuencia) {
     let cont_nivel = 0;
 
-    for (let index = 0;index < secuencia.length;index++) {
+    for (let index = 0; index < secuencia.length; index++) {
         switch (parseInt(secuencia[index])) {
-            case 0: break;
+            case 0:
+                break;
             default:
-                cont_nivel++
+                cont_nivel++;
                 break;
         }
     }
@@ -73,7 +75,7 @@ async function verificar_nivel (secuencia) {
     txtnivel.innerText = "Nivel: " + cont_nivel;
 }
 
-function llamar (url) {
+function llamar(url) {
     if (lock_secuencia || lock_peticion) return;
     lock_peticion = true;
     fetch(url)
@@ -81,14 +83,25 @@ function llamar (url) {
             return responseText.json();
         })
         .then(function (myJson) {
-            console.log(myJson.response);
             Object.keys(myJson.response).forEach((key, index) => {
                 console.log(myJson.response[key]);
-                txtestado.innerText = myJson.response[key].estado;
-                if (myJson.response[key].estado == "inicio") {
+                let estado = myJson.response[key].estado;
+                let secuencia = myJson.response[key].secuencia;
+                // Reiniciar estado de respuesta si se reinicio
+                // o no hay secuencia
+                if (secuencia.every((x) => x == "0")) {
+                    txtRespuesta.textContent = "?";
+                }
+                if (estado == "inicio") {
                     lock_secuencia = true;
-                    verificar_nivel(myJson.response[key].secuencia);
-                    asyncCall(myJson.response[key].secuencia);
+                    verificar_nivel(secuencia);
+                    asyncCall(secuencia);
+                }
+                if (estado == "bien" || estado == "mal") {
+                    console.log(estado);
+                    txtRespuesta.textContent = estado;
+                } else {
+                    txtestado.innerText = estado;
                 }
             });
         })
@@ -100,7 +113,7 @@ function llamar (url) {
         });
 }
 
-function resetled () {
+function resetled() {
     parpadear_color(green);
     parpadear_color(red);
     parpadear_color(blue);
