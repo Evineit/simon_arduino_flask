@@ -47,6 +47,7 @@ body {
     text-align: center;
     font-size: 5em;
     flex: 1 1 100%;
+    max-width: 50vw;
 }
 
 #black-center {
