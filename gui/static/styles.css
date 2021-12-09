@@ -1,0 +1,226 @@
+@import url("https://fonts.googleapis.com/css?family=Coda+Caption:800|Press+Start+2P|Share+Tech+Mono");
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-size: cover;
+    font-family: "Press Start 2P", cursive;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0 50px;
+}
+button {
+    margin: 0 0.2vw;
+}
+
+.apagado {
+    filter: brightness(0.5);
+}
+
+.gameboard {
+    box-sizing: border-box;
+    flex: 1 1 400px;
+    height: auto;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto;
+    /* box-shadow: 0 0 110px -20px #fff; */
+    border: 3vh solid #000;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.col {
+    flex: 1 1 auto;
+}
+
+.gameboard::after {
+    z-index: -1;
+    display: block;
+    content: "";
+    padding-top: 100%;
+    background: transparent;
+    order: 10;
+}
+
+.tabulador {
+    padding-left: 10%;
+    font-size: 5em;
+    flex: 1 1 auto;
+}
+
+#black-center {
+    z-index: 1;
+    display: block;
+    position: absolute;
+    width: 20vh;
+    height: 20vh;
+    background: #000;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto;
+    padding: 0 auto;
+    top: calc(50% - 12vh);
+    left: calc(50% - 12vh);
+    box-shadow: 0 0 70px -20px #fff;
+    border: 2vh solid #000;
+}
+
+.color {
+    flex: 0 0 50%;
+    /* width: 50%; */
+    height: 50%;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    backface-visibility: hidden;
+    -webkit-touch-callout: none !important;
+}
+.color:hover,
+.color:active,
+.color:focus {
+    outline: none;
+    touch-action: none;
+}
+
+.azul {
+    background-image: linear-gradient(-45deg, #0000ff 50%, rgba(0, 0, 0, 0.6));
+    background-color: #0000ff;
+}
+
+.azul.light {
+    background-image: linear-gradient(-45deg, #6f6fff 50%, rgba(0, 0, 0, 0.3));
+}
+
+.rojo {
+    background-image: linear-gradient(225deg, #ff0000 40%, rgba(0, 0, 0, 0.7));
+    background-color: #ff0000;
+}
+
+.rojo.light {
+    background-image: linear-gradient(225deg, #ff8989 40%, rgba(0, 0, 0, 0.3));
+}
+
+.amarillo {
+    background-image: linear-gradient(45deg, #ffee00 37%, rgba(0, 0, 0, 0.7));
+    background-color: #ffee00;
+}
+
+.amarillo.light {
+    background-image: linear-gradient(45deg, #fffab0 37%, rgba(0, 0, 0, 0.4));
+}
+
+.verde {
+    background-image: linear-gradient(-225deg, #00ff00 40%, rgba(0, 0, 0, 0.7));
+    background-color: #00ff00;
+}
+
+.verde.light {
+    background-image: linear-gradient(-225deg, #a1ffa1 40%, rgba(0, 0, 0, 0.3));
+}
+
+.btnEmpezar {
+    width: 320px;
+    height: 80px;
+    background-image: linear-gradient(to bottom, #000, #555);
+    color: #ccc;
+    font-size: 2rem;
+    position: absolute;
+    top: calc(70% - 40px);
+    left: calc(50% - 160px);
+    box-shadow: -6px 0px 20px 2px #000;
+    border-radius: 10px;
+    z-index: 11;
+}
+.btnEmpezar:hover,
+.btnEmpezar:focus,
+.btnEmpezar:active,
+.btnEmpezar:focus-within,
+.btnEmpezar:hover {
+    outline: none;
+}
+
+.hide {
+    display: none;
+}
+* {
+    /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+    font-family: "Press Start 2P", cursive;
+    font-size: 0.7em;
+}
+.simon-txt {
+    text-align: center;
+    height: 30%;
+    margin-top: 0;
+}
+.simon-txt p {
+    margin: 0;
+    padding: 0;
+    margin-block-start: 0em !important;
+    margin-block-end: 0em !important;
+}
+.simon-txt img {
+    padding-top: 3.5vh;
+    height: 3vh;
+}
+.start,
+#speaker {
+    width: 100%;
+    height: 50%;
+    display: inline-block;
+    border-top: 5vh solid #000;
+    background-image: linear-gradient(
+        180deg,
+        #555 10%,
+        rgba(136, 136, 136, 0.1)
+    );
+}
+.start {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+.start button {
+    padding: 0;
+    width: 6vh;
+    height: 6vh;
+    border-radius: 50%;
+    box-shadow: -2px 0 18px -6px #fff;
+    border: 0.6vh solid #000;
+    font-size: 0.9vh;
+    margin-top: 2vh;
+    transform: scale(1.15);
+}
+.start button:focus,
+.start button:active {
+    outline: none;
+}
+.start button:hover {
+    cursor: pointer;
+}
+.start button:active {
+    box-shadow: none;
+    cursor: pointer;
+}
+#btn-start {
+    background-image: linear-gradient(red, darkred);
+}
+#btn-start:hover {
+    background-image: linear-gradient(orangered, red);
+}
+#btn-reset {
+    background-image: linear-gradient(yellow, goldenrod);
+}
+#btn-reset:hover {
+    background-image: linear-gradient(lightyellow, yellow);
+}
+.level-btn-text {
+    margin: 0.5vh 0;
+    padding: 0;
+    display: block;
+    position: absolute;
+    z-index: 10;
+    right: 4vh;
+    font-size: 1vh;
+    text-shadow: 0 0 10px #ccc;
+}
