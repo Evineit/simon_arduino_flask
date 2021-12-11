@@ -71,8 +71,11 @@ function verificar_nivel(secuencia) {
                 break;
         }
     }
+    actualizarNivel(cont_nivel);
+}
 
-    txtnivel.innerText = "Nivel: " + cont_nivel;
+function actualizarNivel(nivel) {
+    txtnivel.textContent = "Nivel: " + nivel;
 }
 
 function llamar(url) {
@@ -100,6 +103,9 @@ function llamar(url) {
                 if (estado == "bien" || estado == "mal") {
                     console.log(estado);
                     txtRespuesta.textContent = estado;
+                    if (estado == "mal") {
+                        actualizarNivel(0);
+                    }
                 } else {
                     txtestado.innerText = estado;
                 }
