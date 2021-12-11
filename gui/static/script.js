@@ -11,11 +11,12 @@ let txtRespuesta = document.getElementById("respuesta");
 
 let lock_secuencia = false;
 let lock_peticion = false;
+let lock_resultado_respuesta = false;
 
 document.querySelectorAll(".boton").forEach(function (boton) {
     boton.classList.add("apagado");
     boton.addEventListener("mousedown", () => {
-        if (lock_secuencia || lock_peticion) return;
+        if (lock_secuencia || lock_peticion || lock_resultado_respuesta) return;
         parpadear_color(boton);
     });
 });
@@ -35,7 +36,8 @@ async function parpadear_esperar(boton, espera = 500) {
     return new Promise((resolve) => setTimeout(resolve, espera));
 }
 
-async function asyncCall(secuencia) {
+async function mostrarSecuencia(secuencia) {
+    lock_secuencia = true;
     for (let index = 0; index < secuencia.length; index++) {
         switch (parseInt(secuencia[index])) {
             case 1:
@@ -77,44 +79,55 @@ function actualizarNivel(nivel) {
 }
 
 function llamar(url) {
-    if (lock_secuencia || lock_peticion) return;
+    if (lock_secuencia || lock_peticion || lock_resultado_respuesta) return;
     lock_peticion = true;
     fetch(url)
         .then(function (responseText) {
             return responseText.json();
         })
-        .then(function (myJson) {
-            Object.keys(myJson.response).forEach((key, index) => {
-                console.log(myJson.response[key]);
-                let estado = myJson.response[key].estado;
-                let secuencia = myJson.response[key].secuencia;
-                // Reiniciar estado de respuesta si se reinicio
-                // o no hay secuencia
-                if (secuencia.every((x) => x == "0")) {
-                    txtRespuesta.textContent = "?";
-                }
-                if (estado == "inicio") {
-                    lock_secuencia = true;
-                    verificar_nivel(secuencia);
-                    asyncCall(secuencia);
-                }
-                if (estado == "bien" || estado == "mal") {
-                    console.log(estado);
-                    txtRespuesta.textContent = estado;
-                    if (estado == "mal") {
-                        actualizarNivel(0);
-                    }
-                } else {
-                    txtestado.innerText = estado;
-                }
-            });
-        })
+        .then((myJson) => resolverRespuestas(myJson.response))
         .catch(function (e) {
             console.error(e);
         })
         .finally(function (e) {
             lock_peticion = false;
         });
+}
+
+async function resolverRespuestas(respuestas) {
+    for (let index = 0; index < Object.keys(respuestas).length; index++) {
+        const estado = respuestas[Object.keys(respuestas)[index]].estado;
+        const secuencia = respuestas[Object.keys(respuestas)[index]].secuencia;
+        // Reiniciar estado de respuesta si se reinicio
+        // o no hay secuencia
+        if (secuencia.every((x) => x == "0")) {
+            txtRespuesta.textContent = "?";
+        }
+        if (estado == "inicio") {
+            verificar_nivel(secuencia);
+            mostrarSecuencia(secuencia);
+        }
+        if (estado == "bien" || estado == "mal") {
+            if (estado == "mal") {
+                actualizarNivel(0);
+            }
+            await mostrarRespuesta(estado);
+        } else {
+            txtestado.innerText = estado;
+        }
+    }
+}
+
+async function mostrarRespuesta(estado) {
+    lock_resultado_respuesta = true;
+    txtRespuesta.textContent = estado;
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            txtRespuesta.textContent = "?";
+            lock_resultado_respuesta = false;
+            resolve("resuelta");
+        }, 800);
+    });
 }
 
 function resetled() {
@@ -128,16 +141,13 @@ green.addEventListener("click", () => {
     llamar(base + "/api/verde");
 });
 
-
 red.addEventListener("click", () => {
     llamar(base + "/api/rojo");
 });
 
-
 blue.addEventListener("click", () => {
     llamar(base + "/api/azul");
 });
-
 
 yellow.addEventListener("click", () => {
     llamar(base + "/api/amarillo");
