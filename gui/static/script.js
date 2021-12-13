@@ -21,13 +21,13 @@ document.querySelectorAll(".boton").forEach(function (boton) {
     });
 });
 
-function parpadear_color(boton) {
+function parpadear_color(boton, tiempo = 1000) {
     boton.classList.remove("apagado");
     return new Promise((resolve) => {
         setTimeout(() => {
             boton.classList.add("apagado");
             resolve("resolved");
-        }, 1000);
+        }, tiempo);
     });
 }
 
@@ -106,6 +106,9 @@ async function resolverRespuestas(respuestas) {
         if (estado == "inicio") {
             verificar_nivel(secuencia);
             mostrarSecuencia(secuencia);
+        } else if (estado == "fin") {
+            mostrarVictoria();
+            actualizarNivel(0);
         }
         if (estado == "bien" || estado == "mal") {
             if (estado == "mal") {
@@ -116,6 +119,17 @@ async function resolverRespuestas(respuestas) {
             txtestado.innerText = estado;
         }
     }
+}
+
+async function mostrarVictoria() {
+    await parpadear_color(green, 333);
+    await parpadear_color(red, 333);
+    await parpadear_color(yellow, 333);
+    await parpadear_color(blue, 333);
+    parpadear_color(green);
+    parpadear_color(red);
+    parpadear_color(yellow);
+    parpadear_color(blue);
 }
 
 async function mostrarRespuesta(estado) {
